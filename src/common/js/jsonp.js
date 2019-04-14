@@ -1,5 +1,5 @@
 import originJsonp from 'jsonp'
-
+//封装jsonp方法
 export default function jsonp(url, data, option) {
   url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
 
@@ -22,3 +22,4 @@ export function param(data) {
   }
   return url ? url.substring(1) : ''
 }
+
