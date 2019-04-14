@@ -16,7 +16,7 @@
             <ul>
               <li @click="selectItem(item)" v-for="item in discList" class="item">
                 <div class="icon">
-                  <img width="60" height="60" :src="item.picUrl">
+                  <img width="60" height="60" v-lazy="item.picUrl">
                 </div>
                 <div class="text">
                   <h2 class="name" v-html="item.songListDesc"></h2>
@@ -26,11 +26,15 @@
             </ul>
           </div>
         </div>
+        <div class="loading-container" v-show="!discList.length">
+          <loading></loading>
+        </div>
       </scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import Loading from 'base/loading/loading';
   import Scroll from 'base/scroll/scroll';
   import Slider from 'base/slider/slider';
   import {getRecommend,getDiscList} from 'api/recommend';
@@ -59,7 +63,6 @@
       _getDiscList(){
           getDiscList().then((res) =>{
             if(res.code === ERR_OK){
-                console.log(22);
                 console.log(res.data);
               this.discList = res.data.songList;
             }
@@ -75,7 +78,8 @@
     },
     components: {
       Slider,
-      Scroll
+      Scroll,
+      Loading
     }
   }
 </script>
