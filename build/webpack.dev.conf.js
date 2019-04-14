@@ -12,6 +12,12 @@ const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
+// 后端代理
+const express = require('express')
+const axios = require('axios')
+const app = express()
+const apiRoutes = express.Router()
+app.use('/api', apiRoutes)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -22,6 +28,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    before(app){
+      app.get('/api/getDiscList', function (req, res) {
+        let url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/m/index.html',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
+    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
